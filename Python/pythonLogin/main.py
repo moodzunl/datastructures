@@ -1,102 +1,58 @@
 import os
 import time
-from subprocess import call
 
+import re
+import uuid
 
-def mostrar_menu(opciones):
-    limpiar()
-    # Renderiza la clave y el valor del menú
-    print('Seleccione una opción:')
-    for clave in sorted(opciones):
-        print(f' {clave}) {opciones[clave][0]}')
+# Definir una función para crear una nueva cuenta
+def crear_cuenta():
+    # Solicitar al usuario que ingrese un nombre de usuario y contraseña
+    username = input("Ingrese su nombre de usuario: ")
+    password = input("Ingrese su contraseña (debe tener al menos 8 caracteres y símbolos especiales): ")
 
+    # Validar la contraseña
+    if len(password) < 8 or not re.search("[!@#$%^&*()_+-=]", password):
+        print("Contraseña no válida. La contraseña debe tener al menos 8 caracteres y símbolos especiales.")
+        return
 
-def leer_opcion(opciones):
-    # Toma la respuesta y la retorna
-    while (respuesta := input('Opción: ')) not in opciones:
-        print('Opción incorrecta. Seleccione una nueva opción')
-    return respuesta
+    # Generar un ID único para la nueva cuenta
+    account_id = str(uuid.uuid4())
 
+    # Guardar las credenciales de inicio de sesión y el ID de la cuenta en el archivo de texto
+    with open("credenciales.txt", "a") as file:
+        file.write(f"{account_id}:{username}:{password}\n")
+    animacion()
+    print(f"¡Cuenta creada con éxito! Su nombre de usuario es {username} y su ID de cuenta es {account_id}")
 
-def ejecutar_opcion(opcion, opciones):
-    limpiar()
-    # Con base en la opción leida lo renderiza
-    opciones[opcion][1]()
+# Definir una función para iniciar sesión en una cuenta existente
+def inicio_sesion():
+    # Solicitar al usuario que ingrese un nombre de usuario y una contraseña
+    username = input("Ingrese su nombre de usuario: ")
+    password = input("Ingrese su contraseña: ")
 
-
-def generar_menu(opciones, opcion_salir):
-    limpiar()
-    # Función general que actua como conjunto de todas las funciones anteriores
-    opcion = None
-    while opcion != opcion_salir:
-        mostrar_menu(opciones)
-        opcion = leer_opcion(opciones)
-        ejecutar_opcion(opcion, opciones)
-        print()
-
-
-def menu_principal():
-    limpiar()
-    # Se hace un objeto de multiples opciones
-    opciones = {
-        '1': ('Autenticarse', autenticar_cuenta),
-        '2': ('Crear cuenta', nueva_cuenta),
-        '3': ('Salir', salir)
-    }
-
-    generar_menu(opciones, str(len(opciones)))
-
-
-def autenticar_cuenta():
-    limpiar()
-    # Maneja el error de un archivo inexistente
+    # Verificar si el nombre de usuario y la contraseña coinciden
     try:
-        existeusuario = False
-        user = input('Introduce el nombre de tu cuenta: ')
-        password = input('Introduce la contraseña de tu cuenta: ')
-        animacion()
-        with open('data.txt', 'r', 1, encoding='utf-8') as userDocument:
-            for line in userDocument:
-                # Verifica que se encuentren los parámetros por cada línea del documento
-                if (user in line) and (password in line):
-                    existeusuario = True
-                else:
-                    pass
-        if existeusuario:
-            print('Identidad verificada')
-            print('----------------------------')
-            input('Presiona enter para acceder. . . ')
-        else:
-            print('Identidad no existente')
-            print('----------------------------')
-            input('Presiona enter para continuar. . . ')
+        with open("credenciales.txt", "r") as file:
+            animacion()
+            for line in file:
+                fields = line.strip().split(":")
+                if fields[1] == username and fields[2] == password:
+                    print(f"¡Inicio de sesión exitoso! Bienvenido, {username}")
+                    print('----------------------------')
+                    input('Presiona enter para acceder. . . ')
+                    return
+        print("Nombre de usuario o contraseña no válidos")
     except FileNotFoundError:
-        limpiar()
         print("El archivo no se encontró")
         input("Presiona enter para continuar. . .")
 
-
-def nueva_cuenta():
-    limpiar()
-    # Añade al documento un nuevo usuario
-    print('Creación de nueva cuenta')
-    print('----------------------------')
-    user = input('Introduce el nombre de tu cuenta: ')
-    password = input('Introduce la contraseña de tu cuenta: ')
-    with open('data.txt', 'a', encoding='utf-8') as userDocument:
-        userDocument.write(str(user) + ' ' + str(password) + '\n')
-    print("Contraseña creada exitosamente")
-    input("Presiona enter para continuar. . .")
-
-
+# Sale del programa
 def salir():
     print("Saliendo. . .")
 
-
+# Limpia la pantalla del sistema operativo
 def limpiar():
-    # Limpia pantalla en base al sistema operativo
-    _ = call('clear' if os.name == 'posix' else 'cls')
-
+    os.system('cls')
 
 def animacion():
     animation = [
@@ -127,6 +83,37 @@ def animacion():
         if i == 3 * 10:
             break
 
+# Bucle principal del programa
+while True:
+    # Solicitar al usuario que seleccione una acción
+    print("¿Qué te gustaría hacer?")
+    print("1. Crear una nueva cuenta")
+    print("2. Iniciar sesión en una cuenta existente")
+    print("3. Salir")
+    choice = input()
 
-if __name__ == '__main__':
-    menu_principal()
+    # Manejar la acción seleccionada por el usuario
+    if choice == "1":
+        limpiar()
+        crear_cuenta()
+    elif choice == "2":
+        limpiar()
+        inicio_sesion()
+    elif choice == "3":
+        limpiar()
+        salir()
+        break
+    else:
+        print("Opción no válida. Por favor, ingrese un número entre 1 y 3.")
+
+
+
+
+
+
+
+
+
+
+
+    
