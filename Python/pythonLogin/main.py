@@ -1,36 +1,56 @@
 import os
 import time
-
 import re
-import uuid
+
+# Definir una lista para almacenar los IDs de cuenta existentes
+ids_existentes = []
+
+
+# Leer el archivo de texto y agregar los IDs existentes a la lista
+with open("credenciales.txt", "r") as file:
+    for line in file:
+        fields = line.strip().split(":")
+        ids_existentes.append(int(fields[0]))
+
 
 # Definir una función para crear una nueva cuenta
 def crear_cuenta():
+    global ids_existentes
+
     # Solicitar al usuario que ingrese un nombre de usuario y contraseña
     username = input("Ingrese su nombre de usuario: ")
     password = input("Ingrese su contraseña (debe tener al menos 8 caracteres y símbolos especiales): ")
 
     # Validar la contraseña
-    if len(password) < 8 or not re.search("[!@#$%^&*()_+-=]", password):
-        print("Contraseña no válida. La contraseña debe tener al menos 8 caracteres y símbolos especiales.")
+    if len(password) != 8 or not re.search("[!@#$%^&*()_+-=]", password):
+        print("Contraseña no válida. La contraseña de ser de 8 caracteres y símbolos especiales.")
+        print('----------------------------')
+        input('Presiona enter para continuar. . . ')
         return
 
-    # Generar un ID único para la nueva cuenta
-    account_id = str(uuid.uuid4())
+    # Generar un nuevo ID único para la cuenta
+    id_cuenta = max(ids_existentes) + 1 if ids_existentes else 1
+    while id_cuenta in ids_existentes:
+        id_cuenta += 1
 
     # Guardar las credenciales de inicio de sesión y el ID de la cuenta en el archivo de texto
     with open("credenciales.txt", "a") as file:
-        file.write(f"{account_id}:{username}:{password}\n")
-    animacion()
-    print(f"¡Cuenta creada con éxito! Su nombre de usuario es {username} y su ID de cuenta es {account_id}")
+        file.write(f"{id_cuenta}:{username}:{password}\n")
+    print(f"¡Cuenta creada con éxito! Su nombre de usuario es {username} y su ID de cuenta es {id_cuenta}")
+    print('----------------------------')
+    input('Presiona enter para continuar. . . ')
+    
+    # Agregar el nuevo ID a la lista de IDs existentes
+    ids_existentes.append(id_cuenta)
 
-# Definir una función para iniciar sesión en una cuenta existente
+
+# Inicia sesión en una cuenta existente
 def inicio_sesion():
-    # Solicitar al usuario que ingrese un nombre de usuario y una contraseña
+    # Solicita al usuario que ingrese un nombre de usuario y una contraseña
     username = input("Ingrese su nombre de usuario: ")
     password = input("Ingrese su contraseña: ")
 
-    # Verificar si el nombre de usuario y la contraseña coinciden
+    # Verifica si el nombre de usuario y la contraseña coinciden
     try:
         with open("credenciales.txt", "r") as file:
             animacion()
@@ -46,14 +66,18 @@ def inicio_sesion():
         print("El archivo no se encontró")
         input("Presiona enter para continuar. . .")
 
+
 # Sale del programa
 def salir():
     print("Saliendo. . .")
+
 
 # Limpia la pantalla del sistema operativo
 def limpiar():
     os.system('cls')
 
+
+# Crea la animacion de la busqueda de usuarios
 def animacion():
     animation = [
         "[        ]",
@@ -83,16 +107,17 @@ def animacion():
         if i == 3 * 10:
             break
 
-# Bucle principal del programa
+# Bucle de ejecución
 while True:
-    # Solicitar al usuario que seleccione una acción
+    # Solicita al usuario que seleccione una acción
+    limpiar()
     print("¿Qué te gustaría hacer?")
     print("1. Crear una nueva cuenta")
     print("2. Iniciar sesión en una cuenta existente")
     print("3. Salir")
     choice = input()
 
-    # Manejar la acción seleccionada por el usuario
+    # Menú
     if choice == "1":
         limpiar()
         crear_cuenta()
