@@ -1,6 +1,6 @@
-import os
-import time
 import re
+from login import logged
+from funciones_auxiliares import limpiar, animacion
 
 # Definir una lista para almacenar los IDs de cuenta existentes
 ids_existentes = []
@@ -13,26 +13,30 @@ try:
             fields = line.strip().split(":")
             ids_existentes.append(int(fields[0]))
 except FileNotFoundError:
-        print("\n")
-        print("El archivo no se encontró")
-        input("Presiona enter para continuar. . .")
+    print("\n")
+    print("El archivo no se encontró")
+    input("Presiona enter para continuar. . .")
 
 
 # Definir una función para crear una nueva cuenta
 def crear_cuenta():
-    global ids_existentes
-
     # Solicitar al usuario que ingrese un nombre de usuario y contraseña
     username = input("Ingrese su nombre de usuario: ")
-    password = input("Ingrese su contraseña (debe tener al menos 8 caracteres y símbolos especiales): ")
-    security_question = input("Escribe una pregunta de seguridad (p. ej., ¿Cuál es el nombre de tu mascota?): ")
+    password = input(
+        "Ingrese su contraseña (debe tener al menos 8 caracteres y símbolos especiales): "
+    )
+    security_question = input(
+        "Escribe una pregunta de seguridad (p. ej., ¿Cuál es el nombre de tu mascota?): "
+    )
     security_answer = input("Escribe la respuesta a la pregunta de seguridad: ")
 
     # Validar la contraseña
     if len(password) != 8 or not re.search("[!@#$%^&*()_+-=]", password):
-        print("Contraseña no válida. La contraseña de ser de 8 caracteres y símbolos especiales.")
-        print('----------------------------')
-        input('Presiona enter para continuar. . . ')
+        print(
+            "Contraseña no válida. La contraseña de ser de 8 caracteres y símbolos especiales."
+        )
+        print("----------------------------")
+        input("Presiona enter para continuar. . . ")
         return
 
     # Generar un nuevo ID único para la cuenta
@@ -42,13 +46,18 @@ def crear_cuenta():
 
     # Guardar las credenciales de inicio de sesión, la pregunta de seguridad y su respuesta, y el ID de la cuenta en el archivo de texto
     with open("credenciales.txt", "a") as file:
-        file.write(f"{id_cuenta}:{username}:{password}:{security_question}:{security_answer}\n")
-    print(f"¡Cuenta creada con éxito! Su nombre de usuario es {username} y su ID de cuenta es {id_cuenta}")
-    print('----------------------------')
-    input('Presiona enter para continuar. . . ')
-    
+        file.write(
+            f"{id_cuenta}:{username}:{password}:{security_question}:{security_answer}\n"
+        )
+    print(
+        f"¡Cuenta creada con éxito! Su nombre de usuario es {username} y su ID de cuenta es {id_cuenta}"
+    )
+    print("----------------------------")
+    input("Presiona enter para continuar. . . ")
+
     # Agregar el nuevo ID a la lista de IDs existentes
     ids_existentes.append(id_cuenta)
+
 
 # Inicia sesión en una cuenta existente
 def inicio_sesion():
@@ -62,78 +71,82 @@ def inicio_sesion():
             animacion()
             for line in file:
                 fields = line.strip().split(":")
+                if len(fields) != 5:
+                    print("El archivo de credenciales es inválido")
+                    return
+
                 if fields[1] == username and fields[2] == password:
                     print(f"¡Inicio de sesión exitoso! Bienvenido, {username}")
-                    print('----------------------------')
-                    input('Presiona enter para acceder. . . ')
-                    return
-        print("Nombre de usuario o contraseña no válidos")
+                    print("----------------------------")
+                    input("Presiona enter para acceder. . . ")
+                    logged(fields[0])
+
+            print("Nombre de usuario o contraseña no válidos")
     except FileNotFoundError:
-        print("El archivo no se encontró")
-        input("Presiona enter para continuar. . .")
+        print("El archivo de credenciales no se encontró")
+    except Exception as e:
+        print(f"Ocurrió un error al leer el archivo de credenciales: {str(e)}")
+
 
 def recuperar_contrasena():
     # Preguntar por el username y validar si existe en el registro
     username = input("Ingrese su nombre de usuario: ")
-    security_question = input("Escribe una pregunta de seguridad (p. ej., ¿Cuál es el nombre de tu mascota?): ")
+    security_question = input(
+        "Escribe una pregunta de seguridad (p. ej., ¿Cuál es el nombre de tu mascota?): "
+    )
     security_answer = input("Escribe la respuesta a la pregunta de seguridad: ")
     try:
-        with open("credenciales.txt", "r") as file:
+        with open("credenciales.txt", "r+") as file:
             animacion()
-            for line in file:
+            found = False
+            lines = file.readlines()
+            file.seek(0)
+            for line in lines:
                 fields = line.strip().split(":")
-                if fields[1] == username and fields[3] == security_question and fields[4] == security_answer:
-                    print(f"¡Inicio de sesión exitoso! Bienvenido, {username}")
-                    newPassword = input("¿Cual será tu nueva contraseña?: ")
-                    fields[2] = newPassword
-                    print('----------------------------')
-                    input('Presiona enter para acceder. . . ')
+                if len(fields) != 5:
+                    print("El archivo de credenciales es inválido")
                     return
-        print("Nombre de usuario, pregunta o contraseña erroneas.")
+
+                if (
+                    fields[1] == username
+                    and fields[3] == security_question
+                    and fields[4] == security_answer
+                ):
+                    print(f"Respuesta correcta. Bienvenido, {username}")
+                    new_password = input("¿Cuál será tu nueva contraseña?: ")
+                    fields[2] = new_password
+                    found = True
+                file.write(f"{':'.join(fields)}\n")
+
+            if not found:
+                print("Nombre de usuario, pregunta o respuesta incorrectas.")
+                return
+
+            print("Contraseña cambiada correctamente")
+            print("----------------------------")
+            input("Presiona enter para acceder. . . ")
     except FileNotFoundError:
-        print("El archivo no se encontró")
-        input("Presiona enter para continuar. . .")
+        print("El archivo de credenciales no se encontró")
+    except Exception as e:
+        print(f"Ocurrió un error al leer/escribir el archivo de credenciales: {str(e)}")
+
+
+# Leer el archivo de texto y agregar los IDs existentes a la lista
+try:
+    with open("credenciales.txt", "r") as file:
+        for line in file:
+            fields = line.strip().split(":")
+            ids_existentes.append(int(fields[0]))
+except FileNotFoundError:
+    print("\n")
+    print("El archivo no se encontró")
+    input("Presiona enter para continuar. . .")
 
 
 # Sale del programa
 def salir():
     print("Saliendo. . .")
 
-
-# Limpia la pantalla del sistema operativo
-def limpiar():
-    os.system('cls')
-
-
-# Crea la animacion de la busqueda de usuarios
-def animacion():
-    animation = [
-        "[        ]",
-        "[=       ]",
-        "[===     ]",
-        "[====    ]",
-        "[=====   ]",
-        "[======  ]",
-        "[======= ]",
-        "[========]",
-        "[ =======]",
-        "[  ======]",
-        "[   =====]",
-        "[    ====]",
-        "[     ===]",
-        "[      ==]",
-        "[       =]",
-        "[        ]",
-        "[        ]"
-    ]
-    continuar = True
-    i = 0
-    while continuar:
-        print(animation[i % len(animation)], end='\r')
-        time.sleep(.1)
-        i += 1
-        if i == 3 * 10:
-            break
 
 # Bucle de ejecución
 while True:
@@ -161,16 +174,4 @@ while True:
         salir()
         break
     else:
-        print("Opción no válida. Por favor, ingrese un número entre 1 y 3.")
-
-
-
-
-
-
-
-
-
-
-
-    
+        print("Opción no válida. Por favor, ingrese un número entre 1 y 4.")
