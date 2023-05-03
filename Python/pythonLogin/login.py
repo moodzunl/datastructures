@@ -1,6 +1,6 @@
 from funciones_auxiliares import limpiar
 from listas_diccionarios import lista_diccionario
-from ordenamientos import metodos_ordenamiento
+from ordenamientos import conseguir_datos
 
 
 # Bucle de ejecución
@@ -21,7 +21,7 @@ def logged(id_account):
             lista_diccionario(id_account)
         elif choice == "2":
             limpiar()
-            metodos_ordenamiento(id_account)
+            conseguir_datos(id_account)
         elif choice == "3":
             # tipos_arboles(id_account)
             limpiar()
