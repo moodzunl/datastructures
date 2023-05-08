@@ -3,7 +3,7 @@ from funciones_auxiliares import limpiar
 arrays = []
 
 
-def quick_sort(arr):
+def quick_sort(arr, depth=0):
     if len(arr) <= 1:
         return arr, 0, 0
 
@@ -12,13 +12,16 @@ def quick_sort(arr):
     middle = [x for x in arr if x == pivot]
     right = [x for x in arr if x > pivot]
 
-    left_sorted, left_swaps, left_comparisons = quick_sort(left)
-    right_sorted, right_swaps, right_comparisons = quick_sort(right)
+    left_sorted, left_swaps, left_comparisons = quick_sort(left, depth + 1)
+    right_sorted, right_swaps, right_comparisons = quick_sort(right, depth + 1)
 
     swaps = left_swaps + right_swaps + len(left) + len(right)
     comparisons = left_comparisons + right_comparisons + len(arr) - len(middle)
 
+    print(f"Profundidad: {depth} | Comparaciones: {left_comparisons + right_comparisons} | Intercambios: {left_swaps + right_swaps}")
+
     return left_sorted + middle + right_sorted, swaps, comparisons
+
 
 
 def bubble_sort(arr):
@@ -31,7 +34,10 @@ def bubble_sort(arr):
             if arr[j] > arr[j + 1]:
                 arr[j], arr[j + 1] = arr[j + 1], arr[j]
                 swaps += 1
+                print(f"Intercambio: {arr[j+1]} <-> {arr[j]}")
+            print(f"Comparación: {arr[j]} y {arr[j + 1]}")
     return arr, swaps, comparisons
+
 
 
 def insert_sort(arr):
@@ -42,9 +48,11 @@ def insert_sort(arr):
         j = i - 1
         while j >= 0 and key < arr[j]:
             comparisons += 1
+            print(f"Comparación: {arr[j]} y {key}")
             arr[j + 1] = arr[j]
             j -= 1
             swaps += 1
+            print(f"Intercambio: {arr[j+2]} <-> {arr[j+1]}")
         arr[j + 1] = key
     return arr, swaps, comparisons
 
@@ -64,12 +72,14 @@ def merge_sort(arr):
         i = j = k = 0
         while i < len(left) and j < len(right):
             comparisons += 1
+            print(f"Comparación: {left[i]} y {right[j]}")
             if left[i] < right[j]:
                 arr[k] = left[i]
                 i += 1
             else:
                 arr[k] = right[j]
                 j += 1
+                print(f"Intercambio: {left[i-1]} <-> {right[j-1]}")
             k += 1
 
         while i < len(left):
@@ -94,13 +104,14 @@ def selection_sort(arr):
         min_idx = i
         for j in range(i + 1, len(arr)):
             comparisons += 1
+            print(f"Comparación: {arr[min_idx]} y {arr[j]}")
             if arr[min_idx] > arr[j]:
                 min_idx = j
         if min_idx != i:
             arr[i], arr[min_idx] = arr[min_idx], arr[i]
             swaps += 1
+            print(f"Intercambio: {arr[i]} <-> {arr[min_idx]}")
     return arr, swaps, comparisons
-
 
 def conseguir_datos(id_account):
     # Leer el archivo de texto y agregar los IDs existentes a la lista
@@ -144,6 +155,8 @@ def conseguir_datos(id_account):
             print(f"Arreglo ordenado: {array_ordenado}")
             print(f"Intercambios realizados: {swaps}")
             print(f"Comparaciones realizadas: {comparisons}")
+            input("Presiona enter para continuar. . .")
+            input()
 
     except FileNotFoundError:
         print("\n")

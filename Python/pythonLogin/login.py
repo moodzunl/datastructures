@@ -1,6 +1,7 @@
 from funciones_auxiliares import limpiar
 from listas_diccionarios import lista_diccionario
 from ordenamientos import conseguir_datos
+from arboles import tipos_arboles
 
 
 # Bucle de ejecución
@@ -23,11 +24,10 @@ def logged(id_account):
             limpiar()
             conseguir_datos(id_account)
         elif choice == "3":
-            # tipos_arboles(id_account)
+            tipos_arboles(id_account)
             limpiar()
         elif choice == "4":
             limpiar()
-            # salir()
             break
         else:
             print("Opción no válida. Por favor, ingrese un número entre 1 y 4.")

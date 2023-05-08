@@ -4,7 +4,7 @@ import time
 
 # Limpia la pantalla del sistema operativo
 def limpiar():
-    os.system("clear")
+    os.system("cls" if os.name == "nt" else "clear")
 
 
 # Crea la animacion de la busqueda de usuarios

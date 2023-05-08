@@ -45,7 +45,7 @@ def crear_cuenta():
         id_cuenta += 1
 
     # Guardar las credenciales de inicio de sesión, la pregunta de seguridad y su respuesta, y el ID de la cuenta en el archivo de texto
-    with open("credenciales.txt", "a") as file:
+    with open("credenciales.txt", "a", encoding="utf-8") as file:
         file.write(
             f"{id_cuenta}:{username}:{password}:{security_question}:{security_answer}\n"
         )
