@@ -104,9 +104,3 @@ def insertar_elementos_y_mostrar(arbol, array):
         print(f"Insertando elemento: {elemento}\n")
         arbol.imprimir()
         time.sleep(1)
-
-
-if __name__ == "__main__":
-    arbol = ArbolAVL()
-    array = [10, 20, 30, 40, 50, 25, 35]
-    insertar_elementos_y_mostrar(arbol, array)
