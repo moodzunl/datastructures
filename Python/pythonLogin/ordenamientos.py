@@ -1,117 +1,11 @@
-from funciones_auxiliares import limpiar
+from ordenamientos_codigo.bubblesort import bubblesort
+from ordenamientos_codigo.insertionsort import insertionsort
+from ordenamientos_codigo.mergesort import mergesort
+from ordenamientos_codigo.quicksort import quicksort
+from ordenamientos_codigo.selectionsort import selectionsort
 
 arrays = []
 
-
-def quick_sort(arr, depth=0):
-    if len(arr) <= 1:
-        return arr, 0, 0
-
-    pivot = arr[len(arr) // 2]
-    left = [x for x in arr if x < pivot]
-    middle = [x for x in arr if x == pivot]
-    right = [x for x in arr if x > pivot]
-
-    left_sorted, left_swaps, left_comparisons = quick_sort(left, depth + 1)
-    right_sorted, right_swaps, right_comparisons = quick_sort(right, depth + 1)
-
-    swaps = left_swaps + right_swaps + len(left) + len(right)
-    comparisons = left_comparisons + right_comparisons + len(arr) - len(middle)
-
-    print(f"Profundidad: {depth} | Comparaciones: {left_comparisons + right_comparisons} | Intercambios: {left_swaps + right_swaps}")
-
-    return left_sorted + middle + right_sorted, swaps, comparisons
-
-
-
-def bubble_sort(arr):
-    n = len(arr)
-    swaps = 0
-    comparisons = 0
-    for i in range(n):
-        for j in range(0, n - i - 1):
-            comparisons += 1
-            if arr[j] > arr[j + 1]:
-                arr[j], arr[j + 1] = arr[j + 1], arr[j]
-                swaps += 1
-                print(f"Intercambio: {arr[j+1]} <-> {arr[j]}")
-            print(f"Comparación: {arr[j]} y {arr[j + 1]}")
-    return arr, swaps, comparisons
-
-
-
-def insert_sort(arr):
-    swaps = 0
-    comparisons = 0
-    for i in range(1, len(arr)):
-        key = arr[i]
-        j = i - 1
-        while j >= 0 and key < arr[j]:
-            comparisons += 1
-            print(f"Comparación: {arr[j]} y {key}")
-            arr[j + 1] = arr[j]
-            j -= 1
-            swaps += 1
-            print(f"Intercambio: {arr[j+2]} <-> {arr[j+1]}")
-        arr[j + 1] = key
-    return arr, swaps, comparisons
-
-
-def merge_sort(arr):
-    if len(arr) > 1:
-        mid = len(arr) // 2
-        left = arr[:mid]
-        right = arr[mid:]
-
-        left_sorted, left_swaps, left_comparisons = merge_sort(left)
-        right_sorted, right_swaps, right_comparisons = merge_sort(right)
-
-        swaps = left_swaps + right_swaps
-        comparisons = left_comparisons + right_comparisons
-
-        i = j = k = 0
-        while i < len(left) and j < len(right):
-            comparisons += 1
-            print(f"Comparación: {left[i]} y {right[j]}")
-            if left[i] < right[j]:
-                arr[k] = left[i]
-                i += 1
-            else:
-                arr[k] = right[j]
-                j += 1
-                print(f"Intercambio: {left[i-1]} <-> {right[j-1]}")
-            k += 1
-
-        while i < len(left):
-            arr[k] = left[i]
-            i += 1
-            k += 1
-
-        while j < len(right):
-            arr[k] = right[j]
-            j += 1
-            k += 1
-
-        return arr, swaps, comparisons
-    else:
-        return arr, 0, 0
-
-
-def selection_sort(arr):
-    swaps = 0
-    comparisons = 0
-    for i in range(len(arr)):
-        min_idx = i
-        for j in range(i + 1, len(arr)):
-            comparisons += 1
-            print(f"Comparación: {arr[min_idx]} y {arr[j]}")
-            if arr[min_idx] > arr[j]:
-                min_idx = j
-        if min_idx != i:
-            arr[i], arr[min_idx] = arr[min_idx], arr[i]
-            swaps += 1
-            print(f"Intercambio: {arr[i]} <-> {arr[min_idx]}")
-    return arr, swaps, comparisons
 
 def conseguir_datos(id_account):
     # Leer el archivo de texto y agregar los IDs existentes a la lista
@@ -139,24 +33,43 @@ def conseguir_datos(id_account):
             ordenamiento = int(input())
 
             if ordenamiento == 1:
-                array_ordenado, swaps, comparisons = quick_sort(array_seleccionado)
+                print(f"Array inicial: {array_seleccionado}\n")
+                print("-----------------Inicio de QuickSort-----------------")
+                quicksort(array_seleccionado, 0, len(array_seleccionado) - 1)
+                print("-----------------Fin de QuickSort-----------------")
+                print(f"Array ordenado: {array_seleccionado}")
+                input("Presiona enter para continuar. . .")
             elif ordenamiento == 2:
-                array_ordenado, swaps, comparisons = bubble_sort(array_seleccionado)
+                print(f"Array inicial: {array_seleccionado}\n")
+                print("-----------------Inicio de BubbleSort-----------------")
+                bubblesort(array)
+                print("-----------------Fin de BubbleSort-----------------")
+                print(f"Array ordenado: {array_seleccionado}")
+                input("Presiona enter para continuar. . .")
             elif ordenamiento == 3:
-                array_ordenado, swaps, comparisons = insert_sort(array_seleccionado)
+                print(f"Array inicial: {array_seleccionado}\n")
+                print("-----------------Inicio de InsertSort-----------------")
+                insertionsort(array_seleccionado)
+                print("-----------------Fin de InsertSort-----------------")
+                print(f"Array ordenado: {array_seleccionado}")
+                input("Presiona enter para continuar. . .")
             elif ordenamiento == 4:
-                array_ordenado, swaps, comparisons = merge_sort(array_seleccionado)
+                print(f"Array inicial: {array_seleccionado}\n")
+                print("-----------------Inicio de MergeSort-----------------")
+                mergesort(array_seleccionado)
+                print("-----------------Fin de MergeSort-----------------")
+                print(f"Array ordenado: {array_seleccionado}")
+                input("Presiona enter para continuar. . .")
             elif ordenamiento == 5:
-                array_ordenado, swaps, comparisons = selection_sort(array_seleccionado)
+                print(f"Array inicial: {array_seleccionado}\n")
+                print("-----------------Inicio de SelectionSort-----------------")
+                selectionsort(array_seleccionado)
+                print("-----------------Fin de SelectionSort-----------------")
+                print(f"Array ordenado: {array_seleccionado}")
+                input("Presiona enter para continuar. . .")
             else:
                 print("Opción inválida.")
                 return
-
-            print(f"Arreglo ordenado: {array_ordenado}")
-            print(f"Intercambios realizados: {swaps}")
-            print(f"Comparaciones realizadas: {comparisons}")
-            input("Presiona enter para continuar. . .")
-            input()
 
     except FileNotFoundError:
         print("\n")

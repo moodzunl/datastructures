@@ -104,7 +104,7 @@ def recuperar_contrasena():
             for line in lines:
                 fields = line.strip().split(":")
                 if len(fields) != 5:
-                    print("El archivo de credenciales es inválido")
+                    print("El archivo de credencial es es inválido")
                     return
 
                 if (
