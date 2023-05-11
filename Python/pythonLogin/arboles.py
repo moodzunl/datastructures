@@ -11,6 +11,8 @@ arrays = []
 
 
 def tipos_arboles(id_account):
+    arrays.clear()
+
     try:
         with open("lista.txt", "r") as file:
             for line in file:

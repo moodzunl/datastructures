@@ -9,6 +9,8 @@ arrays = []
 
 def conseguir_datos(id_account):
     # Leer el archivo de texto y agregar los IDs existentes a la lista
+    arrays.clear()
+
     try:
         with open("lista.txt", "r") as file:
             for line in file:

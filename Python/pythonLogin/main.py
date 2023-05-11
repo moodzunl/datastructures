@@ -148,8 +148,11 @@ def inicio_sesion():
                     print("----------------------------")
                     input("Presiona enter para acceder. . . ")
                     logged(fields[0])
+                    return  # Regresa después de un inicio de sesión exitoso
 
-            print("Nombre de usuario o contraseña no válidos")
+            # Si se ha recorrido todo el archivo y no se ha devuelto nada, las credenciales son incorrectas
+            print("Nombre de usuario o contraseña incorrectos.")
+            input("Presiona enter para continuar. . . ")
     except FileNotFoundError:
         print("El archivo de credenciales no se encontró")
     except Exception as e:
@@ -164,8 +167,8 @@ def recuperar_contrasena():
     )
     security_answer = input("Escribe la respuesta a la pregunta de seguridad: ")
     try:
-        with open("credenciales.txt", "r+") as cred_file, open(
-            "contrasena.txt", "r+"
+        with open("credenciales.txt", "r") as cred_file, open(
+            "contrasena.txt", "r"
         ) as pass_file:
             animacion()
             cred_lines = cred_file.readlines()
@@ -195,16 +198,19 @@ def recuperar_contrasena():
 
             if not found:
                 print("Nombre de usuario, pregunta o respuesta incorrectas.")
+                input("Presiona enter para continuar. . . ")
                 return
 
-            cred_file.seek(0)
+        # Reabrir los archivos para escritura
+        with open("credenciales.txt", "w") as cred_file, open(
+            "contrasena.txt", "w"
+        ) as pass_file:
             cred_file.writelines(cred_lines)
-            pass_file.seek(0)
             pass_file.writelines(pass_lines)
 
-            print("Contraseña cambiada correctamente")
-            print("----------------------------")
-            input("Presiona enter para acceder. . . ")
+        print("Contraseña cambiada correctamente")
+        print("----------------------------")
+        input("Presiona enter para acceder. . . ")
     except FileNotFoundError:
         print("El archivo de credenciales no se encontró")
     except Exception as e:
