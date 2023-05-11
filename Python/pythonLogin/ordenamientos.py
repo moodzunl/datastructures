@@ -21,6 +21,10 @@ def conseguir_datos(id_account):
             print("Selecciona el arreglo que deseas ordenar")
             choice = int(input())
 
+            if choice < 1 or choice > len(arrays):
+                print("La opción seleccionada no es válida")
+                return
+
             array_seleccionado = arrays[choice - 1].copy()
 
             print("Selecciona el tipo de ordenamiento que deseas aplicar:")

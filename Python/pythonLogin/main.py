@@ -18,6 +18,66 @@ except FileNotFoundError:
     input("Presiona enter para continuar. . .")
 
 
+def eliminar_cuenta():
+    username = input("Ingrese su nombre de usuario: ")
+    password = input("Ingrese su contraseña: ")
+    try:
+        with open("credenciales.txt", "r") as cred_file, open(
+            "usuario.txt", "r"
+        ) as user_file, open("contrasena.txt", "r") as pass_file, open(
+            "pregunta.txt", "r"
+        ) as quest_file, open(
+            "respuesta.txt", "r"
+        ) as ans_file:
+            cred_lines = cred_file.readlines()
+            user_lines = user_file.readlines()
+            pass_lines = pass_file.readlines()
+            quest_lines = quest_file.readlines()
+            ans_lines = ans_file.readlines()
+
+        found = False
+        for i, cred_line in enumerate(cred_lines):
+            cred_fields = cred_line.strip().split(":")
+            if len(cred_fields) != 5:
+                print("El archivo de credenciales es inválido")
+                return
+
+            if cred_fields[1] == username and cred_fields[2] == password:
+                print(f"Eliminando, {username}")
+                print("----------------------------")
+                input("Presiona enter para acceder. . . ")
+                found = True
+                break
+
+        if not found:
+            print("Nombre de usuario o contraseña no válidos")
+            return
+
+        del cred_lines[i]
+        del user_lines[i]
+        del pass_lines[i]
+        del quest_lines[i]
+        del ans_lines[i]
+
+        with open("credenciales.txt", "w") as cred_file, open(
+            "usuario.txt", "w"
+        ) as user_file, open("contrasena.txt", "w") as pass_file, open(
+            "pregunta.txt", "w"
+        ) as quest_file, open(
+            "respuesta.txt", "w"
+        ) as ans_file:
+            cred_file.writelines(cred_lines)
+            user_file.writelines(user_lines)
+            pass_file.writelines(pass_lines)
+            quest_file.writelines(quest_lines)
+            ans_file.writelines(ans_lines)
+
+    except FileNotFoundError:
+        print("Alguno de los archivos no se encontró")
+    except Exception as e:
+        print(f"Ocurrió un error al leer o escribir los archivos: {str(e)}")
+
+
 # Definir una función para crear una nueva cuenta
 def crear_cuenta():
     # Solicitar al usuario que ingrese un nombre de usuario y contraseña
@@ -49,6 +109,14 @@ def crear_cuenta():
         file.write(
             f"{id_cuenta}:{username}:{password}:{security_question}:{security_answer}\n"
         )
+    with open("usuario.txt", "a", encoding="utf-8") as file:
+        file.write(f"{id_cuenta}:{username}\n")
+    with open("contrasena.txt", "a", encoding="utf-8") as file:
+        file.write(f"{id_cuenta}:{password}\n")
+    with open("pregunta.txt", "a", encoding="utf-8") as file:
+        file.write(f"{id_cuenta}:{security_question}\n")
+    with open("respuesta.txt", "a", encoding="utf-8") as file:
+        file.write(f"{id_cuenta}:{security_answer}\n")
     print(
         f"¡Cuenta creada con éxito! Su nombre de usuario es {username} y su ID de cuenta es {id_cuenta}"
     )
@@ -96,31 +164,43 @@ def recuperar_contrasena():
     )
     security_answer = input("Escribe la respuesta a la pregunta de seguridad: ")
     try:
-        with open("credenciales.txt", "r+") as file:
+        with open("credenciales.txt", "r+") as cred_file, open(
+            "contrasena.txt", "r+"
+        ) as pass_file:
             animacion()
+            cred_lines = cred_file.readlines()
+            pass_lines = pass_file.readlines()
+
             found = False
-            lines = file.readlines()
-            file.seek(0)
-            for line in lines:
-                fields = line.strip().split(":")
-                if len(fields) != 5:
-                    print("El archivo de credencial es es inválido")
+            for i, cred_line in enumerate(cred_lines):
+                cred_fields = cred_line.strip().split(":")
+                if len(cred_fields) != 5:
+                    print("El archivo de credenciales es inválido")
                     return
 
                 if (
-                    fields[1] == username
-                    and fields[3] == security_question
-                    and fields[4] == security_answer
+                    cred_fields[1] == username
+                    and cred_fields[3] == security_question
+                    and cred_fields[4] == security_answer
                 ):
                     print(f"Respuesta correcta. Bienvenido, {username}")
                     new_password = input("¿Cuál será tu nueva contraseña?: ")
-                    fields[2] = new_password
+                    cred_fields[2] = new_password
+                    cred_lines[i] = ":".join(cred_fields) + "\n"
+                    pass_fields = pass_lines[i].strip().split(":")
+                    pass_fields[1] = new_password
+                    pass_lines[i] = ":".join(pass_fields) + "\n"
                     found = True
-                file.write(f"{':'.join(fields)}\n")
+                    break
 
             if not found:
                 print("Nombre de usuario, pregunta o respuesta incorrectas.")
                 return
+
+            cred_file.seek(0)
+            cred_file.writelines(cred_lines)
+            pass_file.seek(0)
+            pass_file.writelines(pass_lines)
 
             print("Contraseña cambiada correctamente")
             print("----------------------------")
@@ -156,7 +236,8 @@ while True:
     print("1. Crear una nueva cuenta")
     print("2. Iniciar sesión en una cuenta existente")
     print("3. Olvide mi contraseña")
-    print("4. Salir")
+    print("4. Eliminar cuenta")
+    print("5. Salir")
     choice = input()
 
     # Menú
@@ -170,6 +251,9 @@ while True:
         recuperar_contrasena()
         limpiar()
     elif choice == "4":
+        eliminar_cuenta()
+        limpiar()
+    elif choice == "5":
         limpiar()
         salir()
         break

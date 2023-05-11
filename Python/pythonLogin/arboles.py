@@ -23,6 +23,10 @@ def tipos_arboles(id_account):
             print("Selecciona el arreglo que deseas ordenar")
             choiceOrder = int(input())
 
+            if choiceOrder < 1 or choiceOrder > len(arrays):
+                print("La opción seleccionada no es válida")
+                return
+
             array_seleccionado = arrays[choiceOrder - 1].copy()
 
             print("Selecciona el tipo de arbol que deseas utilizar:")

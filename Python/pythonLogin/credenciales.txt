@@ -1,3 +1,2 @@
-1:Moodz:ABC123!!:¿Cuál es el nombre de tu mascota?:Nelson
-2:FerarersUnl:abc123!!:¿Cómo te llamas?:Oscar
-3:Oscar:CBA123!!:¿Cuál es tu comida favorita?:Tacos
+1:Moodz:Oscar!!!:Abc123!!:Abc123!!
+2:Ferarers:BCA123!!:aa:bb
