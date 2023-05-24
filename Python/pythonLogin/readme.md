@@ -1,6 +1,37 @@
-# Estructura de Datos y Algoritmos en Python
+# Estructura de Datos y Algoritmos en Python (v2.0)
 
-Este repositorio contiene varios algoritmos y estructuras de datos implementados en Python, además de un proyecto de inicio de sesión que utiliza archivos de texto para persistencia de datos. El propósito de este repositorio es proporcionar un recurso para que los principiantes aprendan sobre estructuras de datos y algoritmos en Python. Cada archivo de estructura de datos y algoritmo contiene comentarios para explicar cómo funciona el código.
+**Responsable del Proyecto:** Oscar Ivan Sarabia Ramirez
+
+**Fecha de Última Actualización:** 24 de Mayo, 2023
+
+**Validación y Aprobación:** Oscar Ivan Sarabia Ramirez
+
+## Objetivo del Repositorio
+
+Este repositorio tiene como objetivo proporcionar un recurso para que los principiantes aprendan sobre estructuras de datos y algoritmos en Python, así como proporcionar una práctica para trabajar con archivos de texto para persistencia de datos. Para cada estructura de datos y algoritmo se proporcionan archivos que contienen comentarios explicativos sobre el funcionamiento del código implementado.
+
+### Requisitos
+
+Python 3.x instalado en el sistema operativo de su elección.
+
+El proyecto se desarrolló y se actualizará según el siguiente cronograma:
+
+- **Fecha de inicio del proyecto:** [23/01/2023]
+- **Fecha de finalización del proyecto:** [24/05/2023]
+- **Fechas de las revisiones del código:** [19/05/2023]
+- **Fechas de las actualizaciones de la documentación:** [24/05/2023]
+
+### Control del Proyecto
+
+Se llevó a cabo un seguimiento continuo del proyecto, con actualizaciones regulares y revisiones de código para garantizar que el proyecto se mantuviera en el camino correcto. Se realizaron auditorías periódicas para garantizar la calidad del código y la documentación.
+
+### Control de Configuración
+
+Todas las versiones de los archivos del proyecto se mantendrán en el sistema de control de versiones Git. Para cada cambio importante, se creará una nueva rama en Git y se fusionará con la rama principal tras la revisión y aprobación.
+
+### Revisión del Código y Garantía de Calidad
+
+El código de este repositorio ha sido revisado y aprobado por Oscar Ivan Sarabia Ramirez. Todos los códigos cumplen con los estándares de codificación de Python y han sido probados para garantizar su funcionalidad.
 
 ## Arboles
 
@@ -58,6 +89,6 @@ python main.py
 
 5. El archivo se ejecutará y verás la salida en la consola.
 
-## Conclusion
+## Conclusión
 
 Este repositorio es una buena fuente de recursos para que los principiantes aprendan sobre estructuras de datos y algoritmos en Python. Los archivos están bien documentados con comentarios explicando cómo funciona cada código. Además, el proyecto de inicio de sesión proporciona una buena práctica para trabajar con archivos de texto para persistencia de datos. Si eres nuevo en Python y quieres aprender sobre estructuras de datos y algoritmos, este repositorio es un buen lugar para comenzar.
